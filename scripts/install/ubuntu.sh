@@ -25,6 +25,7 @@ apt autoremove -y
 
 apt install -y wget curl lsof unzip
 apt install -y rar unrar
+apt install -y xz-utils
 apt install -y python3-pip
 apt install -y python3-venv
 apt install -y python3-dev
@@ -37,6 +38,14 @@ apt install -y libncurses5
 apt install -y libncurses5-dev
 apt install -y software-properties-common
 apt install -y bzip2
+
+apt install -y libnuma1
+apt install -y libaio1
+apt install -y libaio-dev
+apt install -y libmecab2
+apt install -y numactl
+apt install -y libaio1t64
+
 
 P_VER=`python3 -V | awk '{print $2}'`
 if version_ge "$P_VER" "3.11.0" ;then
@@ -70,7 +79,7 @@ echo "SSH PORT:${SSH_PORT}"
 if [ -f /usr/sbin/ufw ];then
 	# look
 	# ufw status
-	ufw enable
+	echo 'y' | ufw enable
 
 	if [ "$SSH_PORT" != "" ];then
 		ufw allow $SSH_PORT/tcp

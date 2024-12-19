@@ -5,10 +5,15 @@ import io
 import os
 import time
 import re
+import json
 
-sys.path.append(os.getcwd() + "/class/core")
-import mw
-import site_api
+web_dir = os.getcwd() + "/web"
+if os.path.exists(web_dir):
+    sys.path.append(web_dir)
+    os.chdir(web_dir)
+
+import core.mw as mw
+from utils.site import sites as MwSites
 
 app_debug = False
 if mw.isAppleSystem():
@@ -68,9 +73,8 @@ def getHomePage():
         return mw.returnJson(False, '插件未启动!')
 
 
-def getPhpVer(expect=56):
-    import json
-    v = site_api.site_api().getPhpVersion()
+def getPhpVer(expect=74):
+    v = MwSites.instance().getPhpVersion()
     for i in range(len(v)):
         t = int(v[i]['version'])
         if (t >= expect):
@@ -93,16 +97,17 @@ def contentReplace(content):
     service_path = mw.getServerDir()
     php_ver = getCachePhpVer()
     # print php_ver
-    content = content.replace('{$ROOT_PATH}', mw.getRootDir())
+    content = content.replace('{$ROOT_PATH}', mw.getFatherDir())
     content = content.replace('{$SERVER_PATH}', service_path)
     content = content.replace('{$PHP_VER}', php_ver)
+    content = content.replace('{$LOCAL_IP}', mw.getLocalIp())
     return content
 
 
 def contentReplacePHP(content, version):
     service_path = mw.getServerDir()
     # print php_ver
-    content = content.replace('{$ROOT_PATH}', mw.getRootDir())
+    content = content.replace('{$ROOT_PATH}', mw.getFatherDir())
     content = content.replace('{$SERVER_PATH}', service_path)
     content = content.replace('{$PHP_VER}', version)
     return content
@@ -114,8 +119,22 @@ def status():
         return 'start'
     return 'stop'
 
+def getConfAppStart():
+    pstart = mw.getServerDir() + '/php/app_start.php'
+    return pstart
+
+
+def phpPrependFile():
+    app_start = getConfAppStart()
+    tpl = mw.getPluginDir() + '/php/conf/app_start.php'
+    content = mw.readFile(tpl)
+    content = contentReplace(content)
+    mw.writeFile(app_start, content)
+    return True
 
 def start():
+    phpPrependFile()
+
     file_tpl = getPluginDir() + '/conf/xhprof.conf'
     file_run = getConf()
 
@@ -156,12 +175,11 @@ def setPhpVer():
     file_tpl = getPluginDir() + '/conf/xhprof.conf'
     file_run = getConf()
 
-    centent = mw.readFile(file_tpl)
-    centent = contentReplacePHP(centent, args['phpver'])
-    mw.writeFile(file_run, centent)
+    content = mw.readFile(file_tpl)
+    content = contentReplacePHP(content, args['phpver'])
+    mw.writeFile(file_run, content)
 
     mw.restartWeb()
-
     return 'ok'
 
 
@@ -200,13 +218,7 @@ def setXhPort():
     return mw.returnJson(True, '修改成功!')
 
 
-def getConfAppStart():
-    pstart = mw.getServerDir() + '/php/app_start.php'
-    return pstart
-
-
 def installPreInspection():
-
     path = mw.getServerDir() + '/php'
     if not os.path.exists(path):
         return "先安装一个可用的PHP版本!"

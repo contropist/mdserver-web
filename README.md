@@ -22,7 +22,6 @@
 
 * SSH终端工具
 * 面板收藏功能
-* 网站子目录绑定
 * 网站备份功能
 * 插件方式管理
 
@@ -39,14 +38,19 @@ Talk is cheap, show me the code.  -- linus
 - [兼容性测试报告](/compatibility.md)
 - [常用命令说明](/cmd.md) [ mw default ] [ mw update_dev ]
 
+### 特别赞助
+
+- [虚位以待](https://bbs.midoks.icu)
+
 ### 主要插件介绍
 
 * OpenResty - 轻量级，占有内存少，并发能力强。
 * PHP[53-84] - PHP是世界上最好的编程语言。
 * MySQL - 一种关系数据库管理系统。
 * MariaDB - 是MySQL的一个重要分支。
-* MySQL[APT/YUM] - 一种关系数据库管理系统。
+* MySQL[community] - 一种关系数据库管理系统。
 * MongoDB - 一种非关系NOSQL数据库管理系统。
+* PostgreSQL - 功能强大的开源数据库。
 * phpMyAdmin - 著名Web端MySQL管理工具。
 * Memcached - 一个高性能的分布式内存对象缓存系统。
 * Redis - 一个高性能的KV数据库。
@@ -88,13 +92,7 @@ PHP[72-84]支持phpMyAdmin[5.2.1]
 - https://www.youtube.com/watch?v=2taa5K-Jmmw
 
 
-# 特别赞助
-
-- [找资源 - 阿里云盘资源搜索引擎](https://zhaoziyuan1.cc)
-
 # AD - VPS推荐 - 🙏
-
-- [ZZZ评测](https://www.zzzvps.com/)
 
 | 服务商			| 	LOGO   |  推广地址  | 优惠码 |
 | ------------- |----------|-----------|-------|
@@ -110,11 +108,14 @@ docker run -itd --name mw-server --privileged=true -p 7200:7200 -p 80:80 -p 443:
 ```
 
 
-### 版本更新 0.17.3
+### 版本更新 0.18.0
 
-- 新增pgadmin插件。
-- 新增acme_pandominassl_apply插件。
-- 新增快捷指令:mw pgdb。
+- 重新架构面板。
+- PHP84正式版。
+- 加入alist插件。
+- 数据管理-常用命令。
+- 插件读取优化(加入缓存+定时检查状态)。
+- 恢复面板书签。
 - 常规更新。
 
 ### JSDelivr安装地址
@@ -182,11 +183,12 @@ curl --insecure -fsSL  https://raw.githubusercontent.com/midoks/mdserver-web/dev
 
 curl --insecure -fsSL https://code.midoks.icu/midoks/mdserver-web/raw/branch/dev/scripts/install_dev.sh | bash
 curl --insecure -fsSL https://code.midoks.icu/midoks/mdserver-web/raw/branch/dev/scripts/update_dev.sh | bash
+```
 
-
-
-curl --insecure -fsSL  https://raw.githubusercontent.com/midoks/mdserver-web/dev/scripts/install_new.sh | bash
-curl --insecure -fsSL  https://raw.githubusercontent.com/midoks/mdserver-web/dev/scripts/install_new.sh | bash
+### 旧版安装
+```
+curl --insecure -fsSL  https://raw.githubusercontent.com/midoks/mdserver-web/dev/scripts/old/install.sh | bash
+curl --insecure -fsSL  https://raw.githubusercontent.com/midoks/mdserver-web/dev/scripts/old/update.sh | bash
 ```
 
 ### 捐赠地址 USDT（TRC20）

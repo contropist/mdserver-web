@@ -12,20 +12,13 @@ import json
 if sys.platform != "darwin":
     os.chdir("/www/server/mdserver-web")
 
+web_dir = os.getcwd() + "/web"
+if os.path.exists(web_dir):
+    sys.path.append(web_dir)
+    os.chdir(web_dir)
 
-sys.path.append(os.getcwd() + "/class/core")
-import mw
-import db
-
-_ver = sys.version_info
-is_py2 = (_ver[0] == 2)
-is_py3 = (_ver[0] == 3)
-
-DEBUG = False
-
-if is_py2:
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
+import core.mw as mw
+import core.db as db
 
 app_debug = False
 if mw.isAppleSystem():
@@ -199,9 +192,8 @@ def backupAllFunc(stype):
         mw.echoInfo("未授权API,无法使用!!!")
         return ''
 
-    os.chdir(mw.getRunDir())
     backup_dir = mw.getBackupDir()
-    run_dir = mw.getRunDir()
+    run_dir = mw.getPanelDir()
 
     stype = sys.argv[1]
     name = sys.argv[2]
@@ -214,20 +206,15 @@ def backupAllFunc(stype):
     }
 
     backups = []
-    sql = db.Sql()
-
     # print("stype:", stype)
     # 提前获取-清理多余备份
     if stype == 'site':
-        pid = sql.table('sites').where('name=?', (name,)).getField('id')
-        backups = sql.table('backup').where(
-            'type=? and pid=?', ('0', pid)).field('id,filename').select()
+        pid = mw.M('sites').where('name=?', (name,)).getField('id')
+        backups = mw.M('backup').where('type=? and pid=?', ('0', pid)).field('id,filename').select()
     if stype == 'database':
         db_path = mw.getServerDir() + '/mysql'
-        pid = mw.M('databases').dbPos(db_path, 'mysql').where(
-            'name=?', (name,)).getField('id')
-        backups = sql.table('backup').where(
-            'type=? and pid=?', ('1', pid)).field('id,filename').select()
+        pid = mw.M('databases').dbPos(db_path, 'mysql').where('name=?', (name,)).getField('id')
+        backups = mw.M('backup').where('type=? and pid=?', ('1', pid)).field('id,filename').select()
     if stype == 'path':
         backup_path = backup_dir + '/path'
         _name = 'path_{}'.format(os.path.basename(name))
@@ -237,18 +224,15 @@ def backupAllFunc(stype):
     if stype.find('database_') > -1:
         plugin_name = stype.replace('database_', '')
         db_path = mw.getServerDir() + '/' + plugin_name
-        pid = mw.M('databases').dbPos(db_path, 'mysql').where(
-            'name=?', (name,)).getField('id')
-        backups = sql.table('backup').where(
-            'type=? and pid=?', ('1', pid)).field('id,filename').select()
+        pid = mw.M('databases').dbPos(db_path, 'mysql').where('name=?', (name,)).getField('id')
+        backups = mw.M('backup').where('type=? and pid=?', ('1', pid)).field('id,filename').select()
 
     args = stype + " " + name + " " + num
     cmd = 'python3 ' + run_dir + '/scripts/backup.py ' + args
     if stype.find('database_') > -1:
         plugin_name = stype.replace('database_', '')
         args = "database " + name + " " + num
-        cmd = 'python3 ' + run_dir + '/plugins/' + \
-            plugin_name + '/scripts/backup.py ' + args
+        cmd = 'python3 ' + run_dir + '/plugins/' + plugin_name + '/scripts/backup.py ' + args
 
     if stype == 'path':
         name = os.path.basename(name)
@@ -267,8 +251,7 @@ def backupAllFunc(stype):
         bk_name = stype
 
     find_path = backup_dir + '/' + bk_name + '/' + bk_prefix + '_' + name
-    find_new_file = "ls " + find_path + \
-        "_* | grep '.gz' | cut -d \  -f 1 | awk 'END {print}'"
+    find_new_file = "ls " + find_path + "_* | grep '.gz' | cut -d \\  -f 1 | awk 'END {print}'"
 
     # print(find_new_file)
 
