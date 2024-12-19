@@ -9,8 +9,12 @@ import json
 import base64
 import threading
 
-sys.path.append(os.getcwd() + "/class/core")
-import mw
+web_dir = os.getcwd() + "/web"
+if os.path.exists(web_dir):
+    sys.path.append(web_dir)
+    os.chdir(web_dir)
+
+import core.mw as mw
 
 import telebot
 from telebot import types
@@ -41,12 +45,37 @@ def send_msg(bot, tag='ad', trigger_time=300):
     mw.writeFile(lock_file, json.dumps(lock_data))
     # 信号只在一个周期内执行一次|end
 
+    # 跨链混币器Cce.Cash💰低手续费💰隔断溯源 | 10/m | next,6/10 | @hu ge
+    # TTKCDN 无视移动墙/GFW/SNI阻断 TG第一性价比 | 10/m | @ssdpflood
     # https://t.me/gjgzs2022 ｜ 22/m | @GJ_gzs
-    # https://zhaoziyuan1.cc | web | 15/m | 2m | next,12/15 ｜ @baleite
-    # 综合包网/NG接口开户 | 28/m | 6m | next,10/28 | @aabbcx888
+    # 综合包网/NG接口开户 | 28/m | 6m | next,4/28 | x
     # 实名认证/过人脸🕵️‍♀️各种账号处理✅ | 30/m| next,12/30 | @nngzs
     # 桃花资源采集| 13/m| next,1/13 | @xiaolizi1122
     keyboard = [
+        [
+            types.InlineKeyboardButton(
+                text="TTKCDN 性价比最高的商业CDN", url='https://t.me/ssdpflood')
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="TTKCDN 过河南郑州/泉州等地区阻断", url='https://t.me/ssdpflood')
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="TTKCDN 私人定制 属于你自己的独立CDN", url='https://t.me/ssdpflood')
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="TTKCDN 全系主动防御 全球威胁情报网", url='https://t.me/ssdpflood')
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="跨链混币器Cce.Cash💰低手续费💰隔断溯源", url='https://cce.cash/#/main/home?MW')
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="TTKCDN 无视移动墙/GFW/SNI阻断 TG第一性价比", url='https://t.me/ssdpflood')
+        ],
         [
             types.InlineKeyboardButton(
                 text="桃花资源采集🚀 ", url='https://thzy.me')
@@ -81,7 +110,7 @@ def send_msg(bot, tag='ad', trigger_time=300):
             types.InlineKeyboardButton(
                 text="@ME", url='tg://user?id=5568699210'),
             types.InlineKeyboardButton(
-                text="100RMB/M", url='tg://user?id=5568699210')
+                text="150rmb/月[已满]", url='tg://user?id=5568699210')
         ]
     ]
     markup = types.InlineKeyboardMarkup(keyboard)

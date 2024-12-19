@@ -1,11 +1,11 @@
 {
-	"sort": 7,
+	"sort": 5,
 	"ps": "是一个高性能的分布式内存对象缓存系统",
 	"name": "memcached",
 	"title": "Memcached",
 	"shell": "install.sh",
 	"versions":["1.6"],
-	"updates":["1.6.21"],
+	"updates":["1.6.32"],
 	"tip": "soft",
 	"checks": "server/memcached",
 	"path":"server/memcached",
